@@ -18,6 +18,8 @@ const defaultSettings = {
     chartUpdateRate: 60, //update rate in seconds
     chartDisgardPointsAbove: 1100,
     chartDisgardPointsBelow: -10,
+    chartYAxisFloor: 0,
+    chartYAxisCeiling: 1250,
     
     //---- zw-rec device settings----//
     host: '172.17.1.127',

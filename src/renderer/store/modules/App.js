@@ -1,4 +1,5 @@
 const ZWRec = require("zw-rec");
+const _ = require('lodash');
 
 const state = {
   appReady: false,
@@ -6,6 +7,8 @@ const state = {
   loadingCSVData: false,
   zwRec: null,
   isChartUpdating: false,
+  isChartClamped: true,
+  mouseOverThermocouple: ''
 }
 
 const mutations = {
@@ -17,6 +20,10 @@ const mutations = {
   SET_CHARTUPDATING (state, payload) {
     state.isChartUpdating = payload.isUpdating;
   },
+
+  SET_MOUSEOVERTHERMOCOUPLE(state, payload) {
+    state.mouseOverThermocouple = payload.thermocoupleID;
+  }
 
 }
 
@@ -36,10 +43,24 @@ const actions = {
     })
   },
 
+  set_mouseOverThermocouple(context, thermocoupleID){
+    throttleMouseOverCommit(context, thermocoupleID);
+  },
+
+
   //this is an action that TemperatureChart.vue will listen to. It does not mutate the state
   remove_chart_data(context, id){ }
 
 }
+
+
+let throttleMouseOverCommit = _.throttle(function(context, thermocoupleID){
+  context.commit({
+    type: 'SET_MOUSEOVERTHERMOCOUPLE',
+    thermocoupleID
+  });
+},250)
+
 
 export default {
   namespaced: true,

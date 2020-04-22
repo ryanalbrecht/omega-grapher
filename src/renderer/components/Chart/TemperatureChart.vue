@@ -24,19 +24,41 @@ require('highcharts/modules/exporting')(Highcharts);
 Highcharts.setOptions(theme.default);
 
 export default {
+
+  data(){
+    return {
+      yAxisFloor: this.$store.state.Settings.chartYAxisFloor,
+      yAxisCeiling: this.$store.state.Settings.chartYAxisCeiling,
+      currentHighlightedSeries: ''
+    }
+  },
+
   mounted(){
 
-    this.$store.subscribe((mutation) =>{
+    this.$store.subscribe((mutation, state) =>{
       if(mutation.type === "Thermocouples/SET_THERMOCOUPLES"){
         this.updateChartData( this.$store.getters['Thermocouples/thermocouples'] );
       }
+
+      if(mutation.type === "Settings/SET_SETTINGS"){
+        this.chart.yAxis[0].update({
+          //null means highcharts will calculate automatically
+          floor: state.Settings.chartYAxisFloor || null,
+          ceiling: state.Settings.chartYAxisCeiling || null,
+        });
+      }
+
+      if(mutation.type === "App/SET_MOUSEOVERTHERMOCOUPLE"){
+        this.highlightSeries(state.App.mouseOverThermocouple);
+      }
+
     });
 
     this.$store.subscribeAction((action,state)=>{
        if(action.type === "App/remove_chart_data"){
          this.removeChartData(action.payload);
        }
-    })
+    });
 
     this.initChart();
 
@@ -76,7 +98,10 @@ export default {
                 value: 0,
                 width: 1,
                 color: '#808080'
-            }]
+            }],
+            floor: this.yAxisFloor || null,
+            ceiling: this.yAxisCeiling || null,
+            startOnTick: true,
         },
         tooltip: {
             enabled: true,
@@ -209,6 +234,35 @@ export default {
 
       return series;
     },
+
+
+    highlightSeries(seriesId){
+      if(this.currentHighlightedSeries != seriesId){
+        let series = this.chart.get(this.currentHighlightedSeries);
+
+        if(series !== undefined){
+          series.update({
+            color: '#000099',
+            lineWidth: 1,
+            zIndex: 1  
+          });
+          this.currentHighlightedSeries = '';
+        }
+      }
+
+      if(seriesId !== ''){
+        let s = this.chart.get(seriesId);
+        if(s !== undefined){
+          s.update({
+            color: '#e81313',
+            lineWidth: 4,
+            zIndex: 10  
+          });
+          this.currentHighlightedSeries = seriesId;
+        }
+      }
+    },
+
 
     set_chart_height_debounced: _.debounce( function(height){
       this.set_chart_height(height);

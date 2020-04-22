@@ -4,7 +4,7 @@
     <div class="items">
       <div class="item">
         <div class="name">Version:</div>
-        <div class="value">0.1.0</div>
+        <div class="value">1.0.4</div>
       </div>
       <div class="item">
         <div class="name">Platform:</div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tc-wrapper" v-on:click="click">
+  <div class="tc-wrapper" v-on:click="click" @mouseenter="mouseenter" @mouseleave="mouseleave">
     <div class="tc-row">
       <div class="id">{{paddedId}}</div>
       <div class="name">{{thermocouple.name}}</div>
@@ -34,6 +34,12 @@ export default {
   methods: {
     click(){
       this.$router.replace(`/thermocouple/${this.thermocouple.id}`).catch( ()=>{} );
+    },
+    mouseenter(){
+      this.$store.dispatch('App/set_mouseOverThermocouple', this.thermocouple.id);
+    }, 
+    mouseleave(){
+      this.$store.dispatch('App/set_mouseOverThermocouple');
     }
   },
   

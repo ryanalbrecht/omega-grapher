@@ -5,7 +5,7 @@ const { Menu } = remote
 
 
 
-var createMenu = function(router){
+var createMenu = function(router, store){
   const isMac = process.platform === 'darwin'
   const menuTemplate = [
     
@@ -40,7 +40,7 @@ var createMenu = function(router){
           }
         },      
       ]
-    },
+    },  
   
     // Window
     {

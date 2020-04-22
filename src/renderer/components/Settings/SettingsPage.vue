@@ -358,6 +358,40 @@
             </tr>
 
 
+
+           <tr>
+              <td>
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="This will prevent the chart's y-axis from going above the set value. Set the field to a blank value if you do not wish to clamp above a certain value"
+                ></v-icon>  
+                Y-Axis Ceiling :
+              </td>
+              <td>
+                <input type="text" size="7" name="chartYAxisCeiling" v-model.number="settings.chartYAxisCeiling">
+                <span class="error" v-if="!$v.settings.chartYAxisCeiling.integer">Field must be an integer</span>                 
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <td>
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="This will prevent the chart's y-axis from going below the set value. Set the field to a blank value if you do not wish to clamp below a certain value"
+                ></v-icon>  
+                Y-Axis Floor :
+              </td>
+              <td>
+                <input type="text" size="7" name="chartYAxisFloor" v-model.number="settings.chartYAxisFloor">
+                <span class="error" v-if="!$v.settings.chartYAxisFloor.integer">Field must be an integer</span>                 
+              </td>
+            </tr>
+
+
           </table>
         </div>
       </div>
@@ -556,6 +590,12 @@
         },
         chartDisgardPointsBelow: {
           integer
+        },
+        chartYAxisCeiling: {
+          integer,
+        },
+        chartYAxisFloor: {
+          integer,
         }
       }
     }

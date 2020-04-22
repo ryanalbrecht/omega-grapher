@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 Vue.use(Vuelidate);
 
 //create menu
-require('./menu').default(router);
+require('./menu').default(router, store);
 
 if(process.env.NODE_ENV === 'development'){
   const debugMenu = require('debug-menu');
