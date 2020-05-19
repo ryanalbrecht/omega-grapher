@@ -5,8 +5,6 @@
       <div class="name">{{thermocouple.name}}</div>
     </div>
     <div class="tc-row">
-
-      
       <div class="status">
         <div class="status-indicator" v-bind:class="status[1]">
           {{status[0]}}

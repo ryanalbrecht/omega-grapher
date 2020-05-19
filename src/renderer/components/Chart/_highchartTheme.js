@@ -2,7 +2,6 @@ let theme = {
     time: {
         timezone: 'America/Chicago'
     },
-    colors: ['#000099'],
     chart: {
         backgroundColor: '#fff',
         style: {

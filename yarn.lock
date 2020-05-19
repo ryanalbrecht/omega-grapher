@@ -20,6 +20,19 @@
     bessel "^1.0.2"
     jstat "^1.9.2"
 
+"@irojs/iro-core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@irojs/iro-core/-/iro-core-1.0.0.tgz#8cbd19c699c59f70b3c3a773fb7ca2985de5f367"
+  integrity sha512-7vup43KLDtLuurfVXmhFnnNxtDVQ5JvjQglo5yZDM5DcHwSF3XeEjyeerM5nE6Me1QmAoKRGNDz4QVhzQI1OBw==
+
+"@jaames/iro@^5.1.8":
+  version "5.1.8"
+  resolved "https://registry.yarnpkg.com/@jaames/iro/-/iro-5.1.8.tgz#60f5e8a4e56931f0b195fab8c8baef6f73fc10cd"
+  integrity sha512-jsFNYbbSVDQojo9WFf54HD9QxF41FQiPDvDx3wDTLJQSydlbhCzTiGpOSrPNsCfWaqHVuq8QEStrbsXGQOhDlA==
+  dependencies:
+    "@irojs/iro-core" "^1.0.0"
+    preact "^10.0.0"
+
 "@popperjs/core@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.1.1.tgz#12c572ab88ef7345b43f21883fca26631c223085"
@@ -6790,6 +6803,11 @@ postcss@^7.0.14:
     chalk "^2.4.2"
     source-map "^0.6.1"
     supports-color "^6.1.0"
+
+preact@^10.0.0:
+  version "10.4.1"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.4.1.tgz#9b3ba020547673a231c6cf16f0fbaef0e8863431"
+  integrity sha512-WKrRpCSwL2t3tpOOGhf2WfTpcmbpxaWtDbdJdKdjd0aEiTkvOmS4NBkG6kzlaAHI9AkQ3iVqbFWM3Ei7mZ4o1Q==
 
 prepend-http@^1.0.0:
   version "1.0.4"

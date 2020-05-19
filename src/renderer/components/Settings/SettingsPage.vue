@@ -396,6 +396,114 @@
         </div>
       </div>
 
+
+      <div class="flex-grid">
+        <div class="col">
+          <h3>Kepware IotGateway</h3>
+          
+          <table>
+           <tr>
+              <td >
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="The host address of the KepServerEx IoTGateway REST agent"
+                ></v-icon>   
+                Host :
+              </td>
+              <td >
+                <input type="text" size="20" name="kepwareHost" v-model="settings.kepwareHost">
+                <!-- <span class="error" v-if="!$v.settings.chartYAxisCeiling.integer">Field must be an integer</span>                  -->
+              </td>
+            </tr>
+
+            <tr>
+              <td >
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="The username to use when connecting to the KepServerEx host"
+                ></v-icon>  
+                Username :
+              </td>
+              <td >
+                <input type="text" size="20" name="kepwareUsername" v-model="settings.kepwareUsername">
+                <!-- <span class="error" v-if="!$v.settings.chartYAxisCeiling.integer">Field must be an integer</span>                  -->
+              </td>
+            </tr>
+
+            <tr>
+              <td >
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="The username to use when connecting to the KepServerEx host"
+                ></v-icon>  
+                Password :
+              </td>
+              <td >
+                <input type="password" size="20" name="kepwarePassword" v-model="settings.kepwarePassword">
+                <!-- <span class="error" v-if="!$v.settings.chartYAxisCeiling.integer">Field must be an integer</span>                  -->
+              </td>
+            </tr>            
+                 
+          </table>
+
+
+          <table >  
+     
+            <tr>
+              <td colspan="4">
+                <v-icon 
+                  name="question-circle" 
+                  scale="0.7"
+                  data-tippy-content="You can add as many tags as you need to the kepware plugin. Please specify the tag id and the color you wish to use on the chart"
+                ></v-icon>
+                <button @click="addKepwareTag">
+                  Add Tag
+                </button>
+
+              </td>
+            </tr>
+
+            <tr 
+              v-for="(tag,index) in settings.kepwareTags" 
+              v-bind:key="`ktag_${index}`"    
+            >
+              <td>
+                {{index+1}}.
+              </td>
+              <td>                
+                <input type="text" size="55" style="font-size:10.5px; line-height:13px; max-width: 350px;" v-model="tag.id" placeholder="Tbrc1.Device1.Global.R.{TAG_NAME}">           
+              </td>
+              <td>
+                <input type="color" v-model="tag.color" style="padding:0px 3px;">
+              </td>
+              <td align="right">                
+                <button @click="removeKepwareTag(index)" style="vertical-align: bottom;">
+                  delete
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="settings.kepwareTags.length == 0">
+              <td colspan="4">
+                <i>No tags have been added</i>
+              </td>
+            </tr>
+
+          </table>
+          
+        </div>
+        <div class="col" style="background:none">
+          <!-- remove background to -->
+        </div>
+      </div>
+
+
+
+
+
       <div class="flex-grid">
         <div class="col">
           <button @click="saveSettings">Save</button>
@@ -422,6 +530,7 @@
   let equal = require('fast-deep-equal');
   let vex = require('vex-js');
   const defaultSettings = require('../../store/defaultSettings');
+  const _ = require('lodash');
   vex.registerPlugin(require('vex-dialog'));
   vex.defaultOptions.className = 'vex-theme-wireframe';
 
@@ -435,6 +544,8 @@
       tippy('[data-tippy-content]', {
         allowHTML: true
       });
+
+
     },
 
     data(){
@@ -476,6 +587,10 @@
             }
           }).show();
 
+          this.$store.dispatch({
+            type:'App/init_load'         
+          })
+
         })
       },
 
@@ -489,6 +604,27 @@
         this.settings = { ...defaultSettings };
         this.submitStatus = 'OK';
         delete this.settings.chartHeight;
+      },
+
+      addKepwareTag(){
+        var newTag =  { 
+          id:'', 
+          color:'#218500' 
+        };
+
+        var kepwareTags = [
+          ...this.settings.kepwareTags,
+          newTag
+        ]
+
+        this.settings = { ...this.settings, kepwareTags };
+      },
+
+      removeKepwareTag(index){
+        var arr = this.settings.kepwareTags.filter((t,i)=>{
+          return i !== index
+        });
+        this.settings.kepwareTags = [...arr];
       }
     },
 
@@ -633,7 +769,7 @@
     background-color: #d9d9d9;
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 900px) {
     .flex-grid {
       display: block;
     }

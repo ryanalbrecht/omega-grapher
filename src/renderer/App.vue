@@ -26,8 +26,14 @@
         }
       })
 
-      this.$store.dispatch('App/init_zw_rec')
-      this.set_isChartUpdating(true);
+      this.$store.dispatch('App/init_load')
+      
+
+      //give a slight pause to finish loading if there is any loading to be done
+      setTimeout(()=>{
+        this.set_isChartUpdating(true);
+      },400);
+      
     },
 
     computed: {
@@ -53,12 +59,15 @@
       updateThermocoupleData(){
         if(this.isChartUpdating){
           this.fetch_all_thermocouples();
+          this.fetch_all_kepwareTags();          
+
           this.nextDataUpdateTimeout = setTimeout(this.updateThermocoupleData, this.chartUpdateRate*1000);
         }
       },
 
       ...mapActions('Thermocouples', [
         'fetch_all_thermocouples',
+        'fetch_all_kepwareTags',
       ]),
 
       ...mapActions('App', [

@@ -37,7 +37,11 @@ export default {
 
     this.$store.subscribe((mutation, state) =>{
       if(mutation.type === "Thermocouples/SET_THERMOCOUPLES"){
-        this.updateChartData( this.$store.getters['Thermocouples/thermocouples'] );
+        this.updateChartData( this.$store.getters['Thermocouples/temperaturePacket_thermocouples'] );
+      }
+
+      if(mutation.type === "Thermocouples/SET_KEPWARETAGS"){
+        this.updateChartData( this.$store.getters['Thermocouples/temperaturePacket_kepwareTgas'] );
       }
 
       if(mutation.type === "Settings/SET_SETTINGS"){
@@ -72,7 +76,7 @@ export default {
         chart: {
           type: 'line',
           animation: false,
-          margin: [50,20,50,50],
+          margin: [50,50,50,50],
           borderColor: "#bdbdbd",
           borderWidth: 1,
           zoomType: 'x',
@@ -88,21 +92,28 @@ export default {
             tickPixelInterval: 150,
             labels: {
                 format: '{value:%H:%M}'
-            }
-        },
-        yAxis: {
-            title: {
-                text: ''
             },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }],
-            floor: this.yAxisFloor || null,
-            ceiling: this.yAxisCeiling || null,
-            startOnTick: true,
+            lineWidth: 1,
         },
+        yAxis: [
+          {
+              title: {
+                  text: ''
+              },
+              floor: this.yAxisFloor || null,
+              ceiling: this.yAxisCeiling || null,
+              startOnTick: true,
+          },
+          {
+              title: {
+                  text: ''
+              },
+              floor: this.yAxisFloor || null,
+              ceiling: this.yAxisCeiling || null,
+              startOnTick: true,
+              opposite: true
+          },
+        ],
         tooltip: {
             enabled: true,
             formatter: function () {
@@ -116,7 +127,8 @@ export default {
                 turboThreshold: 0,
                 lineWidth: 1,
                 marker: {
-                    enabled: false
+                    enabled: false,
+                    symbol: 'circle'
                 },
                 connectNulls: true
             },
@@ -158,23 +170,23 @@ export default {
           this.chart.xAxis[0].setExtremes(newMinExtreme, dateInstance);
       }
 
-      data.forEach(tc => {
-        if(tc.missing === '1' || tc.disabled === '1'){ return };
-        
-        this.addChartData(
-          tc.id, 
-          tc.name,
-          dateInstance,
-          parseFloat(tc.srs[0].r)
-        );
+      //loop over temperature packets
+      data.forEach(tp => {
+        if(tp.missing === '1' || tp.disabled === '1'){ return };
+        tp.datetime = dateInstance;
+        this.addChartData(tp);
       });
 
       this.chart.redraw();
     },
 
 
-    addChartData(seriesId, name, x, y){
-      
+    addChartData(temperaturePacket){
+      var { temperature, datetime } = temperaturePacket;
+
+      let x = datetime;
+      let y = temperature;
+
       if(
         this.chartDisgardPointsAbove != ''
         && y > this.chartDisgardPointsAbove 
@@ -189,7 +201,7 @@ export default {
         return;
       }
 
-      let series = this.getOrAddChartSeries(seriesId, name);
+      let series = this.getOrAddChartSeries(temperaturePacket);
       let shouldShift = false;
 
       let extremes = this.chart.xAxis[0].getExtremes();
@@ -222,13 +234,19 @@ export default {
 
     },
 
-    getOrAddChartSeries(seriesId, name){
-      let series = this.chart.get(seriesId);
+    getOrAddChartSeries(temperaturePacket){
+      var { id, name, color, type } = temperaturePacket;
+      let series = this.chart.get(id);
       
       if(series === undefined){
         series = this.chart.addSeries({
-          id: seriesId,
-          name: `${seriesId} | ${name}`
+          id: id,
+          name: `${id} | ${name}`,
+          color: color,
+          previousColor: color,
+          yAxis: type == 'TC' ? 0 : 1,
+          zIndex: type == 'TC' ? 1 : 2,
+          lineWidth: type == 'TC' ? 1 : 1.5,
         }, false, false);
       }
 
@@ -242,7 +260,7 @@ export default {
 
         if(series !== undefined){
           series.update({
-            color: '#000099',
+            color: series.options.previousColor,
             lineWidth: 1,
             zIndex: 1  
           });
@@ -252,7 +270,11 @@ export default {
 
       if(seriesId !== ''){
         let s = this.chart.get(seriesId);
+        
         if(s !== undefined){
+          //store the current color in the series object to be used later;
+          s.options.previousColor = s.options.color;
+
           s.update({
             color: '#e81313',
             lineWidth: 4,
@@ -299,10 +321,14 @@ export default {
 
 <style>
   .chart-wrap {
-    padding: 20px 30px;
+    padding: 10px 30px 10px 30px;
     width: 100%;
     resize: vertical;
     overflow: hidden;
+  }
+
+  .highcharts-axis-line {
+    display: none !important;
   }
 
 </style>

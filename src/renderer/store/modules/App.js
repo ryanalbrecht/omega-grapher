@@ -1,4 +1,5 @@
 const ZWRec = require("zw-rec");
+const { IotGateway } = require('kepserverex-js');
 const _ = require('lodash');
 
 const state = {
@@ -6,15 +7,21 @@ const state = {
   loadingTCData: false,
   loadingCSVData: false,
   zwRec: null,
+  iotGateway: null,
   isChartUpdating: false,
   isChartClamped: true,
-  mouseOverThermocouple: ''
+  mouseOverThermocouple: '',
+  defaultChartSeriesColor: '#10259c', //'#000099'
 }
 
 const mutations = {
   
   SET_ZWREC (state, payload) {
     state.zwRec = new ZWRec(payload);
+  },
+
+  SET_IOTGATEWAY (state, payload) {
+    state.iotGateway = new IotGateway({...payload});
   },
 
   SET_CHARTUPDATING (state, payload) {
@@ -29,10 +36,17 @@ const mutations = {
 
 const actions = {
   
-  init_zw_rec({ state, rootState, commit }) {
+  init_load({ state, rootState, commit }) {
     commit({
       type: 'SET_ZWREC',
       host: rootState.Settings.host
+    });
+
+    commit({
+      type: 'SET_IOTGATEWAY',
+      host: rootState.Settings.kepwareHost,
+      username: rootState.Settings.kepwareUsername,
+      password: rootState.Settings.kepwarePassword,
     });
   },
 
@@ -59,7 +73,7 @@ let throttleMouseOverCommit = _.throttle(function(context, thermocoupleID){
     type: 'SET_MOUSEOVERTHERMOCOUPLE',
     thermocoupleID
   });
-},250)
+},200)
 
 
 export default {

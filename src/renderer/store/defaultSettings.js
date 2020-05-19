@@ -26,7 +26,13 @@ const defaultSettings = {
     clientUsername: 'login',
     clientPassword: '12345678',
     adminUsername: 'admin',
-    adminPassword: '00000000'
+    adminPassword: '00000000',
+
+    //---- Kepware Tags ----//
+    kepwareHost: '172.17.2.33',
+    kepwareUsername: 'Administrator',
+    kepwarePassword:  'kepTech44*',
+    kepwareTags: []
 }
 
 module.exports = defaultSettings;

@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "@jaames/iro": "^5.1.8",
     "about-window": "^1.13.2",
     "axios": "^0.18.0",
     "debug-menu": "^0.6.1",
@@ -60,6 +61,7 @@
     "handsontable": "^7.4.2",
     "highcharts": "^8.0.4",
     "is-relative": "^1.0.0",
+    "kepserverex-js": "^1.0.4",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
