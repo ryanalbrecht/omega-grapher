@@ -29,10 +29,10 @@
       this.$store.dispatch('App/init_load')
       
 
-      //give a slight pause to finish loading if there is any loading to be done
+      //give a slight pause to let app finish loading
       setTimeout(()=>{
         this.set_isChartUpdating(true);
-      },400);
+      },500);
       
     },
 

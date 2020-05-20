@@ -49,7 +49,13 @@ export default function createThermocoupleDataLogger( config = {} ){
         readings[0] = new Date().toLocaleString().replace(',','');
         //set positions of csv to sensor readings
         mutation.payload.thermocouples.forEach( tc => {
-          readings[tc.id] = tc.srs[0].r
+
+          if(tc.missing == '1'){
+            readings[tc.id] = "";
+          }else{
+            readings[tc.id] = tc.srs[0].r;
+          }
+
         });
         //write to csv values to files
         let csvReadings = readings.join(',') + '\r\n';

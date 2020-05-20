@@ -1,6 +1,6 @@
 {
   "name": "omega-grapher-2",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "author": "ryanalbrecht <ryan@albrecht.co.za>",
   "description": "An electron-vue project",
   "license": null,
@@ -54,6 +54,7 @@
     "@jaames/iro": "^5.1.8",
     "about-window": "^1.13.2",
     "axios": "^0.18.0",
+    "csv-parser": "^2.3.2",
     "debug-menu": "^0.6.1",
     "deepmerge": "^4.2.2",
     "element-resize-detector": "^1.2.1",

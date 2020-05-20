@@ -109,6 +109,7 @@ const actions = {
       commit('SET_THERMOCOUPLE_REQUEST_ERROR',false);
     })
     .catch(err => {
+      console.log("set thermocouple error", err);
       commit('SET_THERMOCOUPLE_REQUEST_ERROR',true);
     })
   },
@@ -137,6 +138,7 @@ const actions = {
             commit('SET_KEPWARE_REQUEST_ERROR',false);
           }) 
           .catch(err => {
+            console.log("set kepware error", err);
             commit('SET_KEPWARE_REQUEST_ERROR',true);
           })
       }      

@@ -20,6 +20,8 @@ let elementResizeDetector = require("element-resize-detector")();
 let theme = require("./_highchartTheme");
 let _ = require('lodash');
 
+let loadAvailableHistory = require('./historyLoader').default;
+
 require('highcharts/modules/exporting')(Highcharts);
 Highcharts.setOptions(theme.default);
 
@@ -34,7 +36,6 @@ export default {
   },
 
   mounted(){
-
     this.$store.subscribe((mutation, state) =>{
       if(mutation.type === "Thermocouples/SET_THERMOCOUPLES"){
         this.updateChartData( this.$store.getters['Thermocouples/temperaturePacket_thermocouples'] );
@@ -153,7 +154,28 @@ export default {
         }
       });  
       
+      loadAvailableHistory(this.$store, (tcData)=>{
+
+        for(let key in tcData){
+          
+          var tp = { 
+            id    :key, 
+            name  :'', 
+            color :this.$store.state.App.defaultChartSeriesColor, 
+            type  :'TC'  
+          };
+
+          let series = this.getOrAddChartSeries(tp);
+          series.setData(tcData[key],false,false,false);
+          //debugger;
+        }
+
+        this.chart.redraw();
+
+      });
+
       elementResizeDetector.listenTo(chartContainer,this.onContainerResized);
+      
     },
 
 
@@ -163,12 +185,22 @@ export default {
       let extremes = this.chart.xAxis[0].getExtremes();
       let newMinExtreme = dateInstance - (60000 * this.chartTimespan);
 
-      if (
-        extremes.dataMin < newMinExtreme
-        && extremes.min < newMinExtreme) 
-      {
-          this.chart.xAxis[0].setExtremes(newMinExtreme, dateInstance);
+      //remove all points below minimum value
+      for(let series of this.chart.series){
+        for(let point of series.data){
+          if(point.x < newMinExtreme){
+            point.remove()
+          }
+        }
       }
+
+      // if (
+      //   extremes.dataMin < newMinExtreme
+      //   && extremes.min < newMinExtreme) 
+      // {
+      //     this.chart.xAxis[0].setExtremes( newMinExtreme, dateInstance);
+      // }
+
 
       //loop over temperature packets
       data.forEach(tp => {
@@ -250,9 +282,19 @@ export default {
         }, false, false);
       }
 
+      if(series.name != `${id} | ${name}`){
+        this.updateChartSeriesName(id,name);
+      }
+
       return series;
     },
 
+    updateChartSeriesName(id,name){
+      let series = this.chart.get(id);
+      series.update({
+        name: name 
+      }, false)
+    },
 
     highlightSeries(seriesId){
       if(this.currentHighlightedSeries != seriesId){
