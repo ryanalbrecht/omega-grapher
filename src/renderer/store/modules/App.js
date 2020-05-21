@@ -63,7 +63,8 @@ const actions = {
 
 
   //this is an action that TemperatureChart.vue will listen to. It does not mutate the state
-  remove_chart_data(context, id){ }
+  remove_chart_data(context, id){},
+  remove_all_chart_data(context, id){}
 
 }
 

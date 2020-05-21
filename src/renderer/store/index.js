@@ -5,6 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 
 import modules from './modules';
 import createThermocoupleDataLogger from './plugins/thermocoupleDataLogger';
+import createKepwareDataLogger from './plugins/kepwareDataLogger';
 import createThermocoupleHTTPPoster from './plugins/thermocoupleHTTPPoster';
 
 Vue.use(Vuex)
@@ -19,6 +20,7 @@ let plugins = [
   }),
   //createSharedMutations()
   createThermocoupleDataLogger(),
+  createKepwareDataLogger(),
   createThermocoupleHTTPPoster()
 ];
 

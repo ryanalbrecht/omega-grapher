@@ -529,6 +529,7 @@
 
   let equal = require('fast-deep-equal');
   let vex = require('vex-js');
+  let clone = require('rfdc')();
   const defaultSettings = require('../../store/defaultSettings');
   const _ = require('lodash');
   vex.registerPlugin(require('vex-dialog'));
@@ -549,10 +550,11 @@
     },
 
     data(){
-      let enterSettings = { ...this.$store.state.Settings };
-      let settings = { ...this.$store.state.Settings };
+      let enterSettings = clone(this.$store.state.Settings);
+      let settings = clone(this.$store.state.Settings);
       //remove chartHeight setting as that is set on the chart component
       delete settings.chartHeight;
+      delete settings.disabledThermocouples;
 
       return {
        settings,
@@ -595,13 +597,13 @@
       },
 
       resetSettings(){
-        this.settings = { ...this.$store.state.Settings }
+        this.settings = clone(this.$store.state.Settings);
         this.submitStatus = 'OK';
         delete this.settings.chartHeight;
       },
 
       defaultSettings(){
-        this.settings = { ...defaultSettings };
+        this.settings = clone(defaultSettings);
         this.submitStatus = 'OK';
         delete this.settings.chartHeight;
       },
@@ -613,11 +615,11 @@
         };
 
         var kepwareTags = [
-          ...this.settings.kepwareTags,
+          ...clone(this.settings.kepwareTags),
           newTag
         ]
 
-        this.settings = { ...this.settings, kepwareTags };
+        this.settings = { ...clone(this.settings), kepwareTags };
       },
 
       removeKepwareTag(index){
@@ -630,10 +632,12 @@
 
     beforeRouteLeave(to, from, next){
       let storeSettings = {...this.$store.state.Settings};
+      
       delete storeSettings.chartHeight; //I should fix this somehow :/
+      delete storeSettings.disabledThermocouples;
+
       let currSettings = {...this.settings};
       let settingsChanged = !equal(storeSettings, currSettings);
-   
 
 
       if( !equal(this.enterSettings, storeSettings) ){

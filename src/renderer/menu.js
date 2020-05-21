@@ -1,7 +1,7 @@
-const { remote } = require('electron')
+const { remote, shell } = require('electron')
 const openAboutWindow = require('about-window').default;
 const { Menu } = remote
-
+const fs = require('fs');
 
 
 
@@ -38,9 +38,41 @@ var createMenu = function(router, store){
           click: async () => {
             router.replace({name:'settings-page'}).catch( ()=>{} );
           }
-        },      
+        },    
+
+
+        { type: 'separator' },
+        
+        {
+          label: 'Reload Application',
+          click: async () => {
+            remote.getCurrentWindow().reload();
+          }
+        },
+        {
+          label: 'Open Log directory',
+          click: async () => {
+            shell.openItem(store.state.Settings.logPath)
+          }
+        },
+        {
+          label: 'Clear Chart Data',
+          click: async () => {
+            store.dispatch("App/remove_all_chart_data")
+          }
+        }, 
+        {
+          label: 'Clear Log Data',
+          click: async () => {
+            fs.unlinkSync(store.state.Settings.logPath + 'tc-data.log');
+            fs.unlinkSync(store.state.Settings.logPath + 'kp-data.log');
+          }
+        },  
+
       ]
     },  
+
+
   
     // Window
     {

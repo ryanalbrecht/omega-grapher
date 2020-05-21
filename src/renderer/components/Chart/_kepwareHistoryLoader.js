@@ -3,12 +3,12 @@ const fs = require('fs');
 
 // const moment = require('moment');
 
-export default function loadAvailableHistory(store, onFinish){
+export default function loadKepwareHistory(store, onFinish){
   let chartTimespan = store.state.Settings.chartTimespan; //timespan in minutes (600 = 10 hours)
-  let logFile = store.state.Settings.logPath + 'tc-data.log';
+  let logFile = store.state.Settings.logPath + 'kp-data.log';
   let currDate = Math.floor(Date.now() / 1000);
   let cutoffDate = currDate - (chartTimespan*60);
-  let thermocoupleData = {};
+  let kepwareData = {};
 
   //find latest log file.
   if(fs.existsSync(logFile)){
@@ -26,21 +26,21 @@ export default function loadAvailableHistory(store, onFinish){
         
         for(let key in data){
 
+          // if the value if an empty string or the line index of the csv is zero (the date) the skip
           if( data[key] === '' || key == 0 ){ 
             continue; 
           };
 
-
           let x = timestamp;
           let y = parseFloat(data[key]);
 
-          thermocoupleData[key] = thermocoupleData[key] || [];
-          thermocoupleData[key].push([x,y]);
+          kepwareData[key] = kepwareData[key] || [];
+          kepwareData[key].push([x,y]);
         }   
       }
     })  
     .on('end', ()=>{
-      onFinish(thermocoupleData);
+      onFinish(kepwareData);
     }); 
 
   }else{

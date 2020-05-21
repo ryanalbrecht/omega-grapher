@@ -320,11 +320,11 @@ export default {
     },
 
     disableSensor(){
-      this.$store.dispatch('Thermocouples/add_disabled_thermocouple', this.id);
+      this.$store.dispatch('Settings/add_disabled_thermocouple', this.id);
     },
 
     enableSensor(){
-      this.$store.dispatch('Thermocouples/remove_disabled_thermocouple', this.id);
+      this.$store.dispatch('Settings/remove_disabled_thermocouple', this.id);
     },
 
     removeData(){

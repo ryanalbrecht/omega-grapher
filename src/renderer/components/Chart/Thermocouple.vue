@@ -59,7 +59,7 @@ export default {
       }
 
       if(this.thermocouple.open === '1'){
-        return ['Probe','orangeBg']
+        return ['Open','orangeBg']
       }
 
       return ['Good','greenBg']

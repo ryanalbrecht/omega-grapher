@@ -2,7 +2,8 @@ const ZWRec = require("zw-rec");
 const defaultSettings = require('../defaultSettings');
 
 const state = {
-  ...defaultSettings
+  ...defaultSettings,
+  disabledThermocouples: []
 }
 
 const mutations = {
@@ -12,7 +13,16 @@ const mutations = {
 
   SET_SETTINGS(state, payload){
     state = Object.assign(state, payload.settings);
-  }
+  },
+
+  ADD_DISABLED_THERMOCOUPLE (state, payload){
+    state.disabledThermocouples = [...state.disabledThermocouples, payload.id];   
+  },
+
+  REMOVE_DISABLED_THERMOCOUPLE (state, payload){
+    state.disabledThermocouples = state.disabledThermocouples.filter(tc => tc != payload.id);  
+  },
+
 }
 
 const actions = {
@@ -25,7 +35,22 @@ const actions = {
 
   set_settings(context, settings){
     context.commit('SET_SETTINGS', settings);
-  }
+  },
+
+  add_disabled_thermocouple(context, id){
+    context.commit({
+      type: 'ADD_DISABLED_THERMOCOUPLE',
+      id
+    })
+  },
+
+  remove_disabled_thermocouple(context, id){
+    context.commit({
+      type: 'REMOVE_DISABLED_THERMOCOUPLE',
+      id
+    })
+  },
+
 
 }
 

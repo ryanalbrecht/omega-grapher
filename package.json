@@ -1,6 +1,6 @@
 {
   "name": "omega-grapher-2",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "ryanalbrecht <ryan@albrecht.co.za>",
   "description": "An electron-vue project",
   "license": null,
@@ -59,6 +59,7 @@
     "deepmerge": "^4.2.2",
     "element-resize-detector": "^1.2.1",
     "fast-deep-equal": "^3.1.1",
+    "firstline": "^2.0.2",
     "handsontable": "^7.4.2",
     "highcharts": "^8.0.4",
     "is-relative": "^1.0.0",
@@ -69,6 +70,7 @@
     "noty": "^3.2.0-beta",
     "papaparse": "^5.1.1",
     "qs": "^6.9.3",
+    "rfdc": "^1.1.4",
     "streamroller": "^2.2.3",
     "tippy.js": "^6.1.0",
     "vex-js": "^4.1.0",

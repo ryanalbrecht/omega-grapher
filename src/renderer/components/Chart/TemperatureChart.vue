@@ -20,7 +20,8 @@ let elementResizeDetector = require("element-resize-detector")();
 let theme = require("./_highchartTheme");
 let _ = require('lodash');
 
-let loadAvailableHistory = require('./historyLoader').default;
+let loadThermocoupleHistory = require('./_thermocoupleHistoryLoader').default;
+let loadKepwareHistory = require('./_kepwareHistoryLoader').default;
 
 require('highcharts/modules/exporting')(Highcharts);
 Highcharts.setOptions(theme.default);
@@ -62,6 +63,12 @@ export default {
     this.$store.subscribeAction((action,state)=>{
        if(action.type === "App/remove_chart_data"){
          this.removeChartData(action.payload);
+       }
+    });
+
+    this.$store.subscribeAction((action,state)=>{
+       if(action.type === "App/remove_all_chart_data"){
+         this.removeAllChartData();
        }
     });
 
@@ -154,10 +161,13 @@ export default {
         }
       });  
       
-      loadAvailableHistory(this.$store, (tcData)=>{
-
+      // Load thermocouple data that has stored in tc-data.log
+      loadThermocoupleHistory(this.$store, (tcData)=>{
         for(let key in tcData){
-          
+          if(this.$store.state.Settings.disabledThermocouples.indexOf(key) > -1){
+            continue;
+          }
+
           var tp = { 
             id    :key, 
             name  :'', 
@@ -171,7 +181,31 @@ export default {
         }
 
         this.chart.redraw();
+      });
 
+      // Load kepware data that has stored in kp-data.log
+      loadKepwareHistory(this.$store, (kpData)=>{
+        if(this.$store.state.Settings.kepwareTags.length == 0){
+          return;
+        }
+
+        for(let key in kpData){
+          //get kep tag at index
+          let tag = this.$store.state.Settings.kepwareTags[key-1];
+
+          var tp = { 
+            id    :tag.id, 
+            name  :`${tag.id} |`, 
+            color :tag.color, 
+            type  :'KP'  
+          };
+
+          let series = this.getOrAddChartSeries(tp);
+          series.setData(kpData[key],false,false,false);
+          //debugger;
+        }
+
+        this.chart.redraw();
       });
 
       elementResizeDetector.listenTo(chartContainer,this.onContainerResized);
@@ -264,6 +298,13 @@ export default {
         }
       }).show();
 
+    },
+
+    removeAllChartData(){
+      for(let series of this.chart.series){
+        series.setData([],false,false,false);
+      }
+      this.chart.redraw();
     },
 
     getOrAddChartSeries(temperaturePacket){

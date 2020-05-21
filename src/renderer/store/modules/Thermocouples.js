@@ -5,7 +5,6 @@ const { TagBuilder } = require('kepserverex-js');
 const state = {
   thermcoupleRequestError: false,
   kepwareRequestError: false,
-  disabledThermocouples: [],
   thermocouples: [],
   kepwareTags: []
 }
@@ -45,14 +44,6 @@ const mutations = {
 
   SET_SELECTED_THERMOCOUPLE(state, payload) {
     selectedThermocouple = payload.id
-  },
-
-  ADD_DISABLED_THERMOCOUPLE (state, payload){
-    state.disabledThermocouples = [...state.disabledThermocouples, payload.id];   
-  },
-
-  REMOVE_DISABLED_THERMOCOUPLE (state, payload){
-    state.disabledThermocouples = state.disabledThermocouples.filter(tc => tc != payload.id);  
   },
 
   REMOVE_MISSING_THERMOCOUPLES (state, payload){
@@ -156,20 +147,6 @@ const actions = {
     });
   },
 
-  add_disabled_thermocouple(context, id){
-    context.commit({
-      type: 'ADD_DISABLED_THERMOCOUPLE',
-      id
-    })
-  },
-
-  remove_disabled_thermocouple(context, id){
-    context.commit({
-      type: 'REMOVE_DISABLED_THERMOCOUPLE',
-      id
-    })
-  },
-
   remove_missing_thermocouples(context){
     context.commit("REMOVE_MISSING_THERMOCOUPLES");
   },
@@ -196,9 +173,9 @@ const actions = {
 
 let getters = {
 
-  thermocouples: state => {
+  thermocouples: (state,getters,rootState) => {
     let tcArr = state.thermocouples.map(tc => {
-      let disabled = state.disabledThermocouples.indexOf(tc.id) > -1 ? '1' : '0';
+      let disabled = rootState.Settings.disabledThermocouples.indexOf(tc.id) > -1 ? '1' : '0';
       return {...tc, disabled};
     }); 
     return tcArr;
@@ -208,7 +185,7 @@ let getters = {
   //get all thermocouples with a standardized temperature object
   temperaturePacket_thermocouples: (state,getters,rootState) => {
     let tcArr = state.thermocouples.map(tc => {
-      let disabled = state.disabledThermocouples.indexOf(tc.id) > -1 ? '1' : '0';
+      let disabled = rootState.Settings.disabledThermocouples.indexOf(tc.id) > -1 ? '1' : '0';
       return createTemperaturePacket(
         tc.id,
         tc.name,
@@ -233,7 +210,7 @@ let getters = {
         0,
         0,
         kt.color,
-        'KT'
+        'KP'
       );
     })
 
