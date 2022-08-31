@@ -66,7 +66,7 @@
     "kepserverex-js": "^1.0.4",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.28",
+    "moment-timezone": "^0.5.35",
     "noty": "^3.2.0-beta",
     "papaparse": "^5.1.1",
     "qs": "^6.9.3",
