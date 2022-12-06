@@ -69,7 +69,7 @@
     "moment-timezone": "^0.5.28",
     "noty": "^3.2.0-beta",
     "papaparse": "^5.1.1",
-    "qs": "^6.9.3",
+    "qs": "^6.9.7",
     "rfdc": "^1.1.4",
     "streamroller": "^2.2.3",
     "tippy.js": "^6.1.0",
